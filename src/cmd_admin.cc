@@ -129,8 +129,7 @@ void ShutdownCmd::DoCmd(PClient* client) {
   client->SetRes(CmdRes::kNone);
 }
 
-PingCmd::PingCmd(const std::string& name, int16_t arity)
-    : BaseCmd(name, arity, kCmdFlagsWrite, kAclCategoryWrite | kAclCategoryList) {}
+PingCmd::PingCmd(const std::string& name, int16_t arity) : BaseCmd(name, arity, kCmdFlagsFast, kAclCategoryFast) {}
 
 bool PingCmd::DoInitial(PClient* client) { return true; }
 
@@ -225,6 +224,38 @@ void InfoCmd::InfoData(PClient* client) {
   message += ROCKSDB_VERSION + std::string(":") + ROCKSDB_NAMESPACE::GetRocksVersionAsString() + "\r\n";
 
   client->AppendString(message);
+}
+
+CmdDebug::CmdDebug(const std::string& name, int arity) : BaseCmdGroup(name, kCmdFlagsAdmin, kAclCategoryAdmin) {}
+
+bool CmdDebug::HasSubCommand() const { return true; }
+
+CmdDebugHelp::CmdDebugHelp(const std::string& name, int16_t arity)
+    : BaseCmd(name, arity, kCmdFlagsAdmin | kCmdFlagsWrite, kAclCategoryAdmin) {}
+
+bool CmdDebugHelp::DoInitial(PClient* client) { return true; }
+
+void CmdDebugHelp::DoCmd(PClient* client) { client->AppendStringVector(debugHelps); }
+
+CmdDebugOOM::CmdDebugOOM(const std::string& name, int16_t arity)
+    : BaseCmd(name, arity, kCmdFlagsAdmin | kCmdFlagsWrite, kAclCategoryAdmin) {}
+
+bool CmdDebugOOM::DoInitial(PClient* client) { return true; }
+
+void CmdDebugOOM::DoCmd(PClient* client) {
+  auto ptr = ::operator new(std::numeric_limits<unsigned long>::max());
+  ::operator delete(ptr);
+  client->SetRes(CmdRes::kErrOther);
+}
+
+CmdDebugSegfault::CmdDebugSegfault(const std::string& name, int16_t arity)
+    : BaseCmd(name, arity, kCmdFlagsAdmin | kCmdFlagsWrite, kAclCategoryAdmin) {}
+
+bool CmdDebugSegfault::DoInitial(PClient* client) { return true; }
+
+void CmdDebugSegfault::DoCmd(PClient* client) {
+  auto ptr = reinterpret_cast<int*>(0);
+  *ptr = 0;
 }
 
 }  // namespace pikiwidb

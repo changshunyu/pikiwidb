@@ -100,6 +100,8 @@ class Redis {
   // Common Commands
   Status Open(const StorageOptions& storage_options, const std::string& db_path);
 
+  void SetNeedClose(bool need_close) { need_close_.store(need_close); }
+
   virtual Status CompactRange(const DataType& option_type, const rocksdb::Slice* begin, const rocksdb::Slice* end,
                               const ColumnFamilyType& type = kMetaAndData);
 
@@ -154,6 +156,18 @@ class Redis {
   virtual Status ListsTTL(const Slice& key, uint64_t* timestamp);
   virtual Status ZsetsTTL(const Slice& key, uint64_t* timestamp);
   virtual Status SetsTTL(const Slice& key, uint64_t* timestamp);
+
+  virtual Status StringsRename(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status HashesRename(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status ListsRename(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status ZsetsRename(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status SetsRename(const Slice& key, Redis* new_inst, const Slice& newkey);
+
+  virtual Status StringsRenamenx(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status HashesRenamenx(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status ListsRenamenx(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status ZsetsRenamenx(const Slice& key, Redis* new_inst, const Slice& newkey);
+  virtual Status SetsRenamenx(const Slice& key, Redis* new_inst, const Slice& newkey);
 
   // Strings Commands
   Status Append(const Slice& key, const Slice& value, int32_t* ret);
@@ -350,6 +364,7 @@ class Redis {
 
  private:
   int32_t index_ = 0;
+  std::atomic<bool> need_close_ = false;
   Storage* const storage_;
   std::shared_ptr<LockMgr> lock_mgr_;
   rocksdb::DB* db_ = nullptr;

@@ -36,6 +36,8 @@ const std::string kCmdNameExpireat = "expireat";
 const std::string kCmdNamePExpireat = "pexpireat";
 const std::string kCmdNamePersist = "persist";
 const std::string kCmdNameKeys = "keys";
+const std::string kCmdNameRename = "rename";
+const std::string kCmdNameRenameNX = "renamenx";
 
 // raft cmd
 const std::string kCmdNameRaftCluster = "raft.cluster";
@@ -74,11 +76,17 @@ const std::string kCmdNameDiscard = "discard";
 
 // admin
 const std::string kCmdNameConfig = "config";
+const std::string kSubCmdNameConfigGet = "get";
+const std::string kSubCmdNameConfigSet = "set";
 const std::string kCmdNameFlushdb = "flushdb";
 const std::string kCmdNameFlushall = "flushall";
 const std::string kCmdNameAuth = "auth";
 const std::string kCmdNameSelect = "select";
 const std::string kCmdNameShutdown = "shutdown";
+const std::string kCmdNameDebug = "debug";
+const std::string kSubCmdNameDebugHelp = "help";
+const std::string kSubCmdNameDebugOOM = "oom";
+const std::string kSubCmdNameDebugSegfault = "segfault";
 const std::string kCmdNameInfo = "info";
 
 // hash cmd
@@ -130,9 +138,14 @@ const std::string kCmdNameLSet = "lset";
 const std::string kCmdNameLInsert = "linsert";
 const std::string kCmdNameLIndex = "lindex";
 const std::string kCmdNameLLen = "llen";
+const std::string kCmdNameRPoplpush = "rpoplpush";
 
 // zset cmd
 const std::string kCmdNameZAdd = "zadd";
+const std::string kCmdNameZPopMin = "zpopmin";
+const std::string kCmdNameZPopMax = "zpopmax";
+const std::string kCmdNameZInterstore = "zinterstore";
+const std::string kCmdNameZUnionstore = "zunionstore";
 const std::string kCmdNameZRevrange = "zrevrange";
 const std::string kCmdNameZRangebyscore = "zrangebyscore";
 const std::string kCmdNameZRemrangebyscore = "zremrangebyscore";

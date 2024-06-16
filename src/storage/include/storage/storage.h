@@ -186,6 +186,8 @@ class Storage {
 
   Status Open(const StorageOptions& storage_options, const std::string& db_path);
 
+  Status Close();
+
   std::vector<std::future<Status>> CreateCheckpoint(const std::string& checkpoint_path);
 
   Status CreateCheckpointInternal(const std::string& checkpoint_path, int db_index);
@@ -1056,6 +1058,17 @@ class Storage {
   Status Type(const std::string& key, std::vector<std::string>& types);
 
   Status Keys(const DataType& data_type, const std::string& pattern, std::vector<std::string>* keys);
+
+  // Return OK if Rename successfully,
+  // NotFound if key doesn't exist,
+  // otherwise abort.
+  Status Rename(const std::string& key, const std::string& newkey);
+
+  // Return OK if Renamenx successfully,
+  // NotFound if key doesn't exist,
+  // Corruption if newkey already exists,
+  // otherwise abort.
+  Status Renamenx(const std::string& key, const std::string& newkey);
 
   // Dynamic switch WAL
   void DisableWal(const bool is_wal_disable);
